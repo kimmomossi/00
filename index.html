@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질 분석 웹</title>
+    <title>체질판별</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,8 +124,8 @@
     </script>
 </head>
 <body>
-    <h2>체질 분석 웹</h2>
-    <label for="birthDate">생년월일 입력 (예: 2025-01-01):</label>
+    <h2>체질판별</h2>
+    <label for="birthDate">생년월일(양력)입력:</label>
     <input type="date" id="birthDate">
     <button onclick="calculateResults()">결과 확인</button>
 
@@ -133,8 +133,8 @@
     <table>
         <tr>
             <th></th>
-            <th>출생일 - 후천체질</th>
-            <th>입태일 - 선천체질</th>
+            <th>출생일-후천체질</th>
+            <th>입태일-선천체질</th>
         </tr>
         <tr>
             <td class="highlight">날짜</td>
@@ -162,7 +162,7 @@
             <td id="conceptionImbalanceCell"></td>
         </tr>
         <tr>
-            <td class="category">체질 (오장)</td>
+            <td class="category">체질</td>
             <td id="birthConstitutionCell"></td>
             <td id="conceptionConstitutionCell"></td>
         </tr>
