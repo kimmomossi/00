@@ -49,8 +49,8 @@
             let birthHeavenlyStem = getHeavenlyStem(birthYear);
             let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
 
-            let birthLuck = getLuck(birthDate);
-            let conceptionLuck = getLuck(conceptionDate);
+            let birthLuck = getLuck(birthDate, birthYear); // 출생일 운
+            let conceptionLuck = getLuck(conceptionDate, conceptionYear); // 입태일 운
 
             let birthElement = getFiveElements(birthHeavenlyStem, birthLuck);
             let conceptionElement = getFiveElements(conceptionHeavenlyStem, conceptionLuck);
@@ -80,7 +80,7 @@
             return heavenlyStems[(year - 4) % 10];
         }
 
-        function getLuck(date) {
+        function getLuck(date, year) {
             let month = date.getMonth() + 1;
             let day = date.getDate();
 
