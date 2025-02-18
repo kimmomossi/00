@@ -34,23 +34,26 @@
     <script>
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
-            if (!birthDateInput) {
-                alert("생년월일(양력)을 입력하세요");
+            if (!/^\d{8}$/.test(birthDateInput)) {
+                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
                 return;
             }
 
-            let birthDate = new Date(birthDateInput);
+            let birthYear = parseInt(birthDateInput.substring(0, 4));
+            let birthMonth = parseInt(birthDateInput.substring(4, 6));
+            let birthDay = parseInt(birthDateInput.substring(6, 8));
+
+            let birthDate = new Date(birthYear, birthMonth - 1, birthDay);
             let conceptionDate = new Date(birthDate);
             conceptionDate.setDate(conceptionDate.getDate() - 266); // 266일 빼기
 
-            let birthYear = birthDate.getFullYear();
             let conceptionYear = conceptionDate.getFullYear();
 
             let birthHeavenlyStem = getHeavenlyStem(birthYear);
             let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
 
-            let birthLuck = getLuck(birthDate); // 출생일 운 계산
-            let conceptionLuck = getLuck(conceptionDate); // 입태일 운 계산
+            let birthLuck = getLuck(birthDate);
+            let conceptionLuck = getLuck(conceptionDate);
 
             let birthElement = getFiveElements(birthHeavenlyStem, birthLuck);
             let conceptionElement = getFiveElements(conceptionHeavenlyStem, conceptionLuck);
@@ -61,7 +64,7 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-            document.getElementById("birthDateCell").innerText = birthDate.toISOString().split('T')[0];
+            document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
             document.getElementById("conceptionDateCell").innerText = conceptionDate.toISOString().split('T')[0];
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
@@ -125,16 +128,16 @@
 </head>
 <body>
     <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력) 입력:</label>
-    <input type="date" id="birthDate">
+    <label for="birthDate">생년월일(양력) 입력하세요 (YYYYMMDD 형식):</label>
+    <input type="text" id="birthDate" maxlength="8">
     <button onclick="calculateResults()">결과 확인</button>
 
     <h3>결과:</h3>
     <table>
         <tr>
             <th></th>
-            <th>출생일-후천체질</th>
-            <th>입태일-선천체질</th>
+            <th>출생일 - 후천체질</th>
+            <th>입태일 - 선천체질</th>
         </tr>
         <tr>
             <td class="highlight">날짜</td>
@@ -150,6 +153,11 @@
             <td>운</td>
             <td id="birthLuckCell"></td>
             <td id="conceptionLuckCell"></td>
+        </tr>
+        <tr>
+            <td class="category">체질 (오장)</td>
+            <td id="birthConstitutionCell"></td>
+            <td id="conceptionConstitutionCell"></td>
         </tr>
     </table>
 </body>
