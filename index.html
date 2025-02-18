@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질판별</title>
+    <title>체질 분석 웹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,26 +34,23 @@
     <script>
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
-            if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
+            if (!birthDateInput) {
+                alert("생년월일을 입력하세요!");
                 return;
             }
 
-            let birthYear = parseInt(birthDateInput.substring(0, 4));
-            let birthMonth = parseInt(birthDateInput.substring(4, 6));
-            let birthDay = parseInt(birthDateInput.substring(6, 8));
-
-            let birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+            let birthDate = new Date(birthDateInput);
             let conceptionDate = new Date(birthDate);
             conceptionDate.setDate(conceptionDate.getDate() - 266); // 266일 빼기
 
+            let birthYear = birthDate.getFullYear();
             let conceptionYear = conceptionDate.getFullYear();
 
             let birthHeavenlyStem = getHeavenlyStem(birthYear);
             let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
 
-            let birthLuck = getLuck(birthDate);
-            let conceptionLuck = getLuck(conceptionDate);
+            let birthLuck = getLuck(birthDate, birthYear); // 출생일 운
+            let conceptionLuck = getLuck(conceptionDate, conceptionYear); // 입태일 운
 
             let birthElement = getFiveElements(birthHeavenlyStem, birthLuck);
             let conceptionElement = getFiveElements(conceptionHeavenlyStem, conceptionLuck);
@@ -64,8 +61,8 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-            document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
-            document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
+            document.getElementById("birthDateCell").innerText = birthDate.toISOString().split('T')[0];
+            document.getElementById("conceptionDateCell").innerText = conceptionDate.toISOString().split('T')[0];
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
@@ -83,7 +80,7 @@
             return heavenlyStems[(year - 4) % 10];
         }
 
-        function getLuck(date) {
+        function getLuck(date, year) {
             let month = date.getMonth() + 1;
             let day = date.getDate();
 
@@ -127,9 +124,9 @@
     </script>
 </head>
 <body>
-    <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력) 입력하세요 (YYYYMMDD 형식):</label>
-    <input type="text" id="birthDate" maxlength="8">
+    <h2>체질 분석 웹</h2>
+    <label for="birthDate">생년월일 입력 (예: 2025-01-01):</label>
+    <input type="date" id="birthDate">
     <button onclick="calculateResults()">결과 확인</button>
 
     <h3>결과:</h3>
@@ -140,9 +137,34 @@
             <th>입태일 - 선천체질</th>
         </tr>
         <tr>
-            <td>날짜</td>
+            <td class="highlight">날짜</td>
             <td id="birthDateCell"></td>
             <td id="conceptionDateCell"></td>
+        </tr>
+        <tr>
+            <td>천간</td>
+            <td id="birthHeavenlyStemCell"></td>
+            <td id="conceptionHeavenlyStemCell"></td>
+        </tr>
+        <tr>
+            <td>운</td>
+            <td id="birthLuckCell"></td>
+            <td id="conceptionLuckCell"></td>
+        </tr>
+        <tr>
+            <td>오행</td>
+            <td id="birthElementCell"></td>
+            <td id="conceptionElementCell"></td>
+        </tr>
+        <tr>
+            <td>태과/불급</td>
+            <td id="birthImbalanceCell"></td>
+            <td id="conceptionImbalanceCell"></td>
+        </tr>
+        <tr>
+            <td class="category">체질 (오장)</td>
+            <td id="birthConstitutionCell"></td>
+            <td id="conceptionConstitutionCell"></td>
         </tr>
     </table>
 </body>
