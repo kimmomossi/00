@@ -65,7 +65,7 @@
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
             document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
-            document.getElementById("conceptionDateCell").innerText = conceptionDate.toISOString().split('T')[0];
+            document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
@@ -140,24 +140,9 @@
             <th>입태일 - 선천체질</th>
         </tr>
         <tr>
-            <td class="highlight">날짜</td>
+            <td>날짜</td>
             <td id="birthDateCell"></td>
             <td id="conceptionDateCell"></td>
-        </tr>
-        <tr>
-            <td>천간</td>
-            <td id="birthHeavenlyStemCell"></td>
-            <td id="conceptionHeavenlyStemCell"></td>
-        </tr>
-        <tr>
-            <td>운</td>
-            <td id="birthLuckCell"></td>
-            <td id="conceptionLuckCell"></td>
-        </tr>
-        <tr>
-            <td class="category">체질 (오장)</td>
-            <td id="birthConstitutionCell"></td>
-            <td id="conceptionConstitutionCell"></td>
         </tr>
     </table>
 </body>
