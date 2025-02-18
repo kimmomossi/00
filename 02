@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>체질 분석 웹</title>
+<script>
+function calculateResults() {
+let birthDate = document.getElementById("birthDate").value;
+if (!birthDate) {
+alert("생년월일을 입력하세요!");
+return;
+}
+
+let year = new Date(birthDate).getFullYear();
+let heavenlyStem = getHeavenlyStem(year);
+let luck = getLuck(heavenlyStem);
+let fiveElements = getFiveElements(heavenlyStem, luck);
+let imbalance = getImbalance(heavenlyStem);
+let constitution = getConstitution(fiveElements, imbalance);
+let taste = getTaste(constitution);
+
+document.getElementById("result").innerHTML =
+`<p><strong>천간:</strong> ${heavenlyStem}</p>
+<p><strong>운:</strong> ${luck}운</p>
+<p><strong>오행:</strong> ${fiveElements}</p>
+<p><strong>태과/불급:</strong> ${imbalance}</p>
+<p><strong>체질(오장):</strong> ${constitution}</p>
+<p><strong>추천 맛:</strong> ${taste}</p>`;
+}
+
+function getHeavenlyStem(year) {
+const heavenlyStems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
+return heavenlyStems[(year - 4) % 10];
+}
+
+function getLuck(heavenlyStem) {
+if (["갑", "기"].includes(heavenlyStem)) return 1;
+if (["을", "경"].includes(heavenlyStem)) return 2;
+if (["병", "신"].includes(heavenlyStem)) return 3;
+if (["정", "임"].includes(heavenlyStem)) return 4;
+if (["무", "계"].includes(heavenlyStem)) return 5;
+return "알 수 없음";
+}
+
+function getFiveElements(heavenlyStem, luck) {
+const order = {
+"갑": ["토", "금", "수", "목", "화"],
+"기": ["토", "금", "수", "목", "화"],
+"을": ["금", "수", "목", "화", "토"],
+"경": ["금", "수", "목", "화", "토"],
+"병": ["수", "목", "화", "토", "금"],
+"신": ["수", "목", "화", "토", "금"],
+"정": ["목", "화", "토", "금", "수"],
+"임": ["목", "화", "토", "금", "수"],
+"무": ["화", "토", "금", "수", "목"],
+"계": ["화", "토", "금", "수", "목"]
+};
+return order[heavenlyStem][luck - 1];
+}
+
+function getImbalance(heavenlyStem) {
+return ["갑", "병", "무", "경", "임"].includes(heavenlyStem) ? "태과" : "불급";
+}
+
+function getConstitution(fiveElements, imbalance) {
+const mapping = {
+"목": { "태과": "간실비허", "불급": "폐실간허" },
+"화": { "태과": "심실폐허", "불급": "신실심허" },
+"수": { "태과": "신실심허", "불급": "비실신허" },
+"토": { "태과": "비실신허", "불급": "간실비허" },
+"금": { "태과": "폐실간허", "불급": "심실폐허" }
+};
+return mapping[fiveElements][imbalance];
+}
+
+function getTaste(constitution) {
+const tasteMapping = {
+"간실비허": "신맛",
+"심실폐허": "쓴맛",
+"비실심허": "단맛",
+"폐실간허": "매운맛",
+"신실심허": "짠맛"
+};
+return tasteMapping[constitution] || "알 수 없음";
+}
+</script>
+</head>
+<body>
+<h2>체질 분석 웹</h2>
+<label for="birthDate">생년월일 입력 (예: 2025-01-01):</label>
+<input type="date" id="birthDate">
+<button onclick="calculateResults()">결과 확인</button>
+
+<h3>결과:</h3>
+<div id="result"></div>
+</body>
+</html>
