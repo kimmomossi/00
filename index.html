@@ -4,6 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>체질 분석 웹</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .category {
+            background-color: #ffcc00;
+            font-weight: bold;
+        }
+    </style>
     <script>
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
@@ -34,24 +61,18 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-            let birthTaste = getTaste(birthConstitution);
-            let conceptionTaste = getTaste(conceptionConstitution);
-
-            document.getElementById("result").innerHTML =
-                `<p><strong>출생일:</strong> ${birthDate.toISOString().split('T')[0]}</p>
-                 <p><strong>입태일 (266일 전):</strong> ${conceptionDate.toISOString().split('T')[0]}</p>
-                 <p><strong>출생일 천간:</strong> ${birthHeavenlyStem}</p>
-                 <p><strong>입태일 천간:</strong> ${conceptionHeavenlyStem}</p>
-                 <p><strong>출생일 운:</strong> ${birthLuck}운</p>
-                 <p><strong>입태일 운:</strong> ${conceptionLuck}운</p>
-                 <p><strong>출생일 오행:</strong> ${birthElement}</p>
-                 <p><strong>입태일 오행:</strong> ${conceptionElement}</p>
-                 <p><strong>출생일 태과/불급:</strong> ${birthImbalance}</p>
-                 <p><strong>입태일 태과/불급:</strong> ${conceptionImbalance}</p>
-                 <p><strong>출생일 체질:</strong> ${birthConstitution}</p>
-                 <p><strong>입태일 체질:</strong> ${conceptionConstitution}</p>
-                 <p><strong>출생일 추천 맛:</strong> ${birthTaste}</p>
-                 <p><strong>입태일 추천 맛:</strong> ${conceptionTaste}</p>`;
+            document.getElementById("birthDateCell").innerText = birthDate.toISOString().split('T')[0];
+            document.getElementById("conceptionDateCell").innerText = conceptionDate.toISOString().split('T')[0];
+            document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
+            document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
+            document.getElementById("birthLuckCell").innerText = birthLuck + "운";
+            document.getElementById("conceptionLuckCell").innerText = conceptionLuck + "운";
+            document.getElementById("birthElementCell").innerText = birthElement;
+            document.getElementById("conceptionElementCell").innerText = conceptionElement;
+            document.getElementById("birthImbalanceCell").innerText = birthImbalance;
+            document.getElementById("conceptionImbalanceCell").innerText = conceptionImbalance;
+            document.getElementById("birthConstitutionCell").innerText = birthConstitution;
+            document.getElementById("conceptionConstitutionCell").innerText = conceptionConstitution;
         }
 
         function getHeavenlyStem(year) {
@@ -100,17 +121,6 @@
             };
             return mapping[fiveElements][imbalance];
         }
-
-        function getTaste(constitution) {
-            const tasteMapping = {
-                "간실비허": "신맛",
-                "심실폐허": "쓴맛",
-                "비실심허": "단맛",
-                "폐실간허": "매운맛",
-                "신실심허": "짠맛"
-            };
-            return tasteMapping[constitution] || "알 수 없음";
-        }
     </script>
 </head>
 <body>
@@ -120,6 +130,42 @@
     <button onclick="calculateResults()">결과 확인</button>
 
     <h3>결과:</h3>
-    <div id="result"></div>
+    <table>
+        <tr>
+            <th></th>
+            <th>출생일 - 후천체질</th>
+            <th>입태일 - 선천체질</th>
+        </tr>
+        <tr>
+            <td class="highlight">날짜</td>
+            <td id="birthDateCell"></td>
+            <td id="conceptionDateCell"></td>
+        </tr>
+        <tr>
+            <td>천간</td>
+            <td id="birthHeavenlyStemCell"></td>
+            <td id="conceptionHeavenlyStemCell"></td>
+        </tr>
+        <tr>
+            <td>운</td>
+            <td id="birthLuckCell"></td>
+            <td id="conceptionLuckCell"></td>
+        </tr>
+        <tr>
+            <td>오행</td>
+            <td id="birthElementCell"></td>
+            <td id="conceptionElementCell"></td>
+        </tr>
+        <tr>
+            <td>태과/불급</td>
+            <td id="birthImbalanceCell"></td>
+            <td id="conceptionImbalanceCell"></td>
+        </tr>
+        <tr>
+            <td class="category">체질 (오장)</td>
+            <td id="birthConstitutionCell"></td>
+            <td id="conceptionConstitutionCell"></td>
+        </tr>
+    </table>
 </body>
 </html>
