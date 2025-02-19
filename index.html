@@ -64,6 +64,11 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
+            console.log("출생일 정보:", birthYear, birthMonth, birthDay);
+            console.log("입태일 정보:", conceptionYear, conceptionDate.getMonth() + 1, conceptionDate.getDate());
+            console.log("출생일 천간:", birthHeavenlyStem, "운:", birthLuck, "오행:", birthElement);
+            console.log("입태일 천간:", conceptionHeavenlyStem, "운:", conceptionLuck, "오행:", conceptionElement);
+
             document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
             document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
@@ -143,16 +148,6 @@
             <td class="highlight">날짜</td>
             <td id="birthDateCell"></td>
             <td id="conceptionDateCell"></td>
-        </tr>
-        <tr>
-            <td>천간</td>
-            <td id="birthHeavenlyStemCell"></td>
-            <td id="conceptionHeavenlyStemCell"></td>
-        </tr>
-        <tr>
-            <td>운</td>
-            <td id="birthLuckCell"></td>
-            <td id="conceptionLuckCell"></td>
         </tr>
     </table>
 </body>
