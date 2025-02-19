@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질판별</title>
+    <title>체질 분석 웹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,26 +34,23 @@
     <script>
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
-            if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
+            if (!birthDateInput) {
+                alert("생년월일을 입력하세요!");
                 return;
             }
 
-            let birthYear = parseInt(birthDateInput.substring(0, 4));
-            let birthMonth = parseInt(birthDateInput.substring(4, 6));
-            let birthDay = parseInt(birthDateInput.substring(6, 8));
-
-            let birthDate = new Date(birthYear, birthMonth - 1, birthDay);
+            let birthDate = new Date(birthDateInput);
             let conceptionDate = new Date(birthDate);
             conceptionDate.setDate(conceptionDate.getDate() - 266); // 266일 빼기
 
+            let birthYear = birthDate.getFullYear();
             let conceptionYear = conceptionDate.getFullYear();
 
             let birthHeavenlyStem = getHeavenlyStem(birthYear);
             let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
 
-            let birthLuck = getLuck(birthDate);
-            let conceptionLuck = getLuck(conceptionDate);
+            let birthLuck = getLuck(birthDate); // 출생일 운
+            let conceptionLuck = getLuck(conceptionDate); // 입태일 운
 
             let birthElement = getFiveElements(birthHeavenlyStem, birthLuck);
             let conceptionElement = getFiveElements(conceptionHeavenlyStem, conceptionLuck);
@@ -64,13 +61,8 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-            console.log("출생일 정보:", birthYear, birthMonth, birthDay);
-            console.log("입태일 정보:", conceptionYear, conceptionDate.getMonth() + 1, conceptionDate.getDate());
-            console.log("출생일 천간:", birthHeavenlyStem, "운:", birthLuck, "오행:", birthElement);
-            console.log("입태일 천간:", conceptionHeavenlyStem, "운:", conceptionLuck, "오행:", conceptionElement);
-
-            document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
-            document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
+            document.getElementById("birthDateCell").innerText = birthDate.toISOString().split('T')[0];
+            document.getElementById("conceptionDateCell").innerText = conceptionDate.toISOString().split('T')[0];
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
@@ -92,11 +84,23 @@
             let month = date.getMonth() + 1;
             let day = date.getDate();
 
-            if ((month === 1 && day >= 20) || (month === 4 && day <= 1)) return 1;
-            if ((month === 4 && day >= 2) || (month === 6 && day <= 16)) return 2;
-            if ((month === 6 && day >= 17) || (month === 8 && day <= 29)) return 3;
-            if ((month === 8 && day >= 30) || (month === 11 && day <= 10)) return 4;
-            return 5;
+            let luckPeriods = [
+                { start: "0120", end: "0401", luck: 1 },
+                { start: "0402", end: "0616", luck: 2 },
+                { start: "0617", end: "0829", luck: 3 },
+                { start: "0830", end: "1110", luck: 4 },
+                { start: "1111", end: "0119", luck: 5 }
+            ];
+
+            let formattedDate = (month < 10 ? "0" : "") + month + (day < 10 ? "0" : "") + day;
+
+            for (let period of luckPeriods) {
+                if ((formattedDate >= period.start && formattedDate <= period.end) ||
+                    (period.start === "1111" && (formattedDate >= "1111" || formattedDate <= "0119"))) {
+                    return period.luck;
+                }
+            }
+            return "오류";
         }
 
         function getFiveElements(heavenlyStem, luck) {
@@ -132,9 +136,9 @@
     </script>
 </head>
 <body>
-    <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력) 입력하세요 (YYYYMMDD 형식):</label>
-    <input type="text" id="birthDate" maxlength="8">
+    <h2>체질 분석 웹</h2>
+    <label for="birthDate">생년월일 입력 (예: 2025-01-01):</label>
+    <input type="date" id="birthDate">
     <button onclick="calculateResults()">결과 확인</button>
 
     <h3>결과:</h3>
@@ -148,6 +152,16 @@
             <td class="highlight">날짜</td>
             <td id="birthDateCell"></td>
             <td id="conceptionDateCell"></td>
+        </tr>
+        <tr>
+            <td>천간</td>
+            <td id="birthHeavenlyStemCell"></td>
+            <td id="conceptionHeavenlyStemCell"></td>
+        </tr>
+        <tr>
+            <td>운</td>
+            <td id="birthLuckCell"></td>
+            <td id="conceptionLuckCell"></td>
         </tr>
     </table>
 </body>
