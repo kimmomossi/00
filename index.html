@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질판별</title>
+    <title>체질 분석 웹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
             if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
+                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
                 return;
             }
 
@@ -64,11 +64,16 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
+            let birthDayStemBranch = getDayStemBranch(birthYear, birthMonth, birthDay);
+            let conceptionDayStemBranch = getDayStemBranch(conceptionYear, conceptionDate.getMonth() + 1, conceptionDate.getDate());
+
             // 결과를 표에 업데이트
             document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
             document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
+            document.getElementById("birthDayStemBranchCell").innerText = birthDayStemBranch;
+            document.getElementById("conceptionDayStemBranchCell").innerText = conceptionDayStemBranch;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
             document.getElementById("conceptionLuckCell").innerText = conceptionLuck + "운";
             document.getElementById("birthElementCell").innerText = birthElement;
@@ -82,6 +87,15 @@
         function getHeavenlyStem(year) {
             const heavenlyStems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
             return heavenlyStems[(year - 4) % 10];
+        }
+
+        function getDayStemBranch(year, month, day) {
+            const heavenlyStems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
+            const earthlyBranches = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
+            let totalDays = new Date(year, month - 1, day).getTime() / (1000 * 60 * 60 * 24);
+            let dayStem = heavenlyStems[(totalDays + 6) % 10];  // 6을 더해 보정
+            let dayBranch = earthlyBranches[(totalDays + 4) % 12]; // 4를 더해 보정
+            return dayStem + dayBranch;
         }
 
         function getLuck(date) {
@@ -106,42 +120,11 @@
             }
             return "오류";
         }
-
-        function getFiveElements(heavenlyStem, luck) {
-            const startingElements = {
-                "갑": "土", "기": "土",
-                "을": "金", "경": "金",
-                "병": "水", "신": "水",
-                "정": "木", "임": "木",
-                "무": "火", "계": "火"
-            };
-
-            const cycle = ["土", "金", "水", "木", "火"];
-            let startElement = startingElements[heavenlyStem];
-            let startIndex = cycle.indexOf(startElement);
-
-            return cycle[(startIndex + luck - 1) % 5];
-        }
-
-        function getImbalance(heavenlyStem) {
-            return ["갑", "병", "무", "경", "임"].includes(heavenlyStem) ? "태과" : "불급";
-        }
-
-        function getConstitution(fiveElements, imbalance) {
-            const mapping = {
-                "木": { "태과": "간실비허", "불급": "폐실간허" },
-                "火": { "태과": "심실폐허", "불급": "신실심허" },
-                "水": { "태과": "신실심허", "불급": "비실신허" },
-                "土": { "태과": "비실신허", "불급": "간실비허" },
-                "金": { "태과": "폐실간허", "불급": "심실폐허" }
-            };
-            return mapping[fiveElements][imbalance];
-        }
     </script>
 </head>
 <body>
-    <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력)입력 (YYYYMMDD 형식):</label>
+    <h2>체질 분석 웹</h2>
+    <label for="birthDate">생년월일 입력 (YYYYMMDD 형식):</label>
     <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101">
     <button onclick="calculateResults()">결과 확인</button>
 
@@ -149,8 +132,8 @@
     <table>
         <tr>
             <th></th>
-            <th>출생일  (후천체질:좌)</th>
-            <th>입태일  (선천체질:우)</th>
+            <th>출생일 - 후천체질</th>
+            <th>입태일 - 선천체질</th>
         </tr>
         <tr>
             <td class="highlight">날짜</td>
@@ -161,6 +144,11 @@
             <td>천간</td>
             <td id="birthHeavenlyStemCell"></td>
             <td id="conceptionHeavenlyStemCell"></td>
+        </tr>
+        <tr>
+            <td>일주</td>
+            <td id="birthDayStemBranchCell"></td>
+            <td id="conceptionDayStemBranchCell"></td>
         </tr>
         <tr>
             <td>운</td>
