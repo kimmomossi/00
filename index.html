@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질판별</title>
+    <title>체질 분석 웹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
             if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
+                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
                 return;
             }
 
@@ -65,8 +65,8 @@
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
             // 결과를 표에 업데이트
-            document.getElementById("birthDateCell").innerText = ${birthYear}년 ${birthMonth}월 ${birthDay}일;
-            document.getElementById("conceptionDateCell").innerText = ${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일;
+            document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
+            document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
@@ -140,8 +140,8 @@
     </script>
 </head>
 <body>
-    <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력) 입력 (YYYYMMDD 형식):</label>
+    <h2>체질 분석 웹</h2>
+    <label for="birthDate">생년월일 입력 (YYYYMMDD 형식):</label>
     <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101">
     <button onclick="calculateResults()">결과 확인</button>
 
