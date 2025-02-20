@@ -37,7 +37,7 @@
     function calculateResults() {
       let birthDateInput = document.getElementById("birthDate").value;
       if (!/^\d{8}$/.test(birthDateInput)) {
-        alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
+        alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
         return;
       }
 
@@ -185,7 +185,7 @@
 <body>
   <h2>체질판별</h2>
   <label for="birthDate">생년월일(양력) 입력 (YYYYMMDD 형식):</label>
-  <input type="text" id="birthDate" maxlength="8" placeholder="예: 19820906">
+  <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101">
   <button onclick="calculateResults()">결과 확인</button>
 
   <h3>결과:</h3>
