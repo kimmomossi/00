@@ -45,12 +45,12 @@
             const earthlyBranches = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
 
             // 1984년 2월 4일(입춘) 기준으로 날짜 계산
-            let baseDate = new Date(1984, 1, 4); // 1984년 2월 4일
+            let baseDate = new Date(1899, 11, 31); // 1900년 1월 1일 직전날
             let inputDate = new Date(year, month - 1, day);
             let dayDifference = Math.floor((inputDate - baseDate) / (1000 * 60 * 60 * 24));
 
-            let dayStem = heavenlyStems[(dayDifference % 10 + 10) % 10];
-            let dayBranch = earthlyBranches[(dayDifference % 12 + 12) % 12];
+            let dayStem = heavenlyStems[(dayDifference + 9) % 10];
+            let dayBranch = earthlyBranches[(dayDifference + 1) % 12];
 
             return dayStem + dayBranch;
         }
