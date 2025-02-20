@@ -52,6 +52,9 @@
             let birthHeavenlyStem = getHeavenlyStem(birthYear);
             let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
 
+            let birthDayStem = getDayHeavenlyStem(birthYear, birthMonth, birthDay);
+            let conceptionDayStem = getDayHeavenlyStem(conceptionYear, conceptionDate.getMonth() + 1, conceptionDate.getDate());
+
             let birthLuck = getLuck(birthDate);
             let conceptionLuck = getLuck(conceptionDate);
 
@@ -64,16 +67,13 @@
             let birthConstitution = getConstitution(birthElement, birthImbalance);
             let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-            let birthDayStemBranch = getDayStemBranch(birthYear, birthMonth, birthDay);
-            let conceptionDayStemBranch = getDayStemBranch(conceptionYear, conceptionDate.getMonth() + 1, conceptionDate.getDate());
-
             // 결과를 표에 업데이트
             document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
             document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth() + 1}월 ${conceptionDate.getDate()}일`;
             document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
             document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
-            document.getElementById("birthDayStemBranchCell").innerText = birthDayStemBranch;
-            document.getElementById("conceptionDayStemBranchCell").innerText = conceptionDayStemBranch;
+            document.getElementById("birthDayStemCell").innerText = birthDayStem;
+            document.getElementById("conceptionDayStemCell").innerText = conceptionDayStem;
             document.getElementById("birthLuckCell").innerText = birthLuck + "운";
             document.getElementById("conceptionLuckCell").innerText = conceptionLuck + "운";
             document.getElementById("birthElementCell").innerText = birthElement;
@@ -89,18 +89,35 @@
             return heavenlyStems[(year - 4) % 10];
         }
 
-        function getDayStemBranch(year, month, day) {
+        function getDayHeavenlyStem(year, month, day) {
             const heavenlyStems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
-            const earthlyBranches = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
-            
             let baseDate = new Date(1900, 0, 1); // 1900년 1월 1일 기준
             let inputDate = new Date(year, month - 1, day);
             let dayDifference = Math.floor((inputDate - baseDate) / (1000 * 60 * 60 * 24));
+            return heavenlyStems[(dayDifference + 6) % 10]; // 일간 계산
+        }
 
-            let dayStem = heavenlyStems[(dayDifference + 6) % 10];
-            let dayBranch = earthlyBranches[(dayDifference + 4) % 12];
+        function getLuck(date) {
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
 
-            return dayStem + dayBranch;
+            let luckPeriods = [
+                { start: "0120", end: "0401", luck: 1 },
+                { start: "0402", end: "0616", luck: 2 },
+                { start: "0617", end: "0829", luck: 3 },
+                { start: "0830", end: "1110", luck: 4 },
+                { start: "1111", end: "0119", luck: 5 }
+            ];
+
+            let formattedDate = (month < 10 ? "0" : "") + month + (day < 10 ? "0" : "") + day;
+
+            for (let period of luckPeriods) {
+                if ((formattedDate >= period.start && formattedDate <= period.end) ||
+                    (period.start === "1111" && (formattedDate >= "1111" || formattedDate <= "0119"))) {
+                    return period.luck;
+                }
+            }
+            return "오류";
         }
     </script>
 </head>
@@ -128,9 +145,9 @@
             <td id="conceptionHeavenlyStemCell"></td>
         </tr>
         <tr>
-            <td>일주</td>
-            <td id="birthDayStemBranchCell"></td>
-            <td id="conceptionDayStemBranchCell"></td>
+            <td>일간</td>
+            <td id="birthDayStemCell"></td>
+            <td id="conceptionDayStemCell"></td>
         </tr>
         <tr>
             <td>운</td>
