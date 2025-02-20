@@ -1,7 +1,9 @@
-ㆍ<!DOCTYPE html>
+1
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>체질판별</title>
   <style>
     body {
@@ -10,7 +12,7 @@
     }
     table {
       width: 70%;
-      margin: 15px auto;
+      margin: 20px auto;
       border-collapse: collapse;
     }
     th, td {
@@ -37,7 +39,7 @@
     function calculateResults() {
       let birthDateInput = document.getElementById("birthDate").value;
       if (!/^\d{8}$/.test(birthDateInput)) {
-        alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
+        alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
         return;
       }
 
@@ -66,7 +68,7 @@
       let birthConstitution = getConstitution(birthElement, birthImbalance);
       let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
 
-      // 기존 결과 업데이트
+      // 결과를 표에 업데이트
       document.getElementById("birthDateCell").innerText =
         `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
       document.getElementById("conceptionDateCell").innerText =
@@ -139,7 +141,9 @@
     }
 
     function getImbalance(heavenlyStem) {
-      return ["갑", "병", "무", "경", "임"].includes(heavenlyStem) ? "태과" : "불급";
+      return ["갑", "병", "무", "경", "임"].includes(heavenlyStem)
+        ? "태과"
+        : "불급";
     }
 
     function getConstitution(fiveElements, imbalance) {
@@ -165,26 +169,21 @@
       "갑진","을사","병오","정미","무신","기유","경술","신해","임자","계축",
       "갑인","을묘","병진","정사","무오","기미","경신","신유","임술","계해"
     ];
-    // "임진"의 인덱스(28)
-    // 찾기: dayPillars[28] === "임진"
-    const referenceIndex = 28;
-    // 기준 날짜(1982-09-06)
-    const referenceDate = new Date(1982, 8, 6); // 9월은 month=8
+    // 기준 날짜: 1982-09-06 → "임진"을 기준으로 설정 (배열에서 "임진"의 인덱스는 28)
+    const referenceDate = new Date(1982, 8, 6); // 9월 = month 8
+    const referenceIndex = 28; // "임진"
 
     function getBirthDayPillar(year, month, day) {
-      // 기준 날짜와 입력 날짜의 일수 차이
       let inputDate = new Date(year, month - 1, day);
-      let diff = Math.floor((inputDate - referenceDate) / (1000*60*60*24));
-
-      // 60갑자 순환
+      let diff = Math.floor((inputDate - referenceDate) / (1000 * 60 * 60 * 24));
       let newIndex = ((referenceIndex + diff) % 60 + 60) % 60;
-      return dayPillars[newIndex]; // 예: "임진"
+      return dayPillars[newIndex];
     }
   </script>
 </head>
 <body>
   <h2>체질판별</h2>
-  <label for="birthDate">생년월일(양력) 입력 (YYYYMMDD 형식):</label>
+  <label for="birthDate">생년월일 입력 (YYYYMMDD 형식):</label>
   <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101">
   <button onclick="calculateResults()">결과 확인</button>
 
@@ -225,7 +224,7 @@
       <td id="birthConstitutionCell"></td>
       <td id="conceptionConstitutionCell"></td>
     </tr>
-    <!-- [추가] 출생일 일주(천간+지지) -->
+    <!-- 추가된 행: 출생일 일주(천간+지지) -->
     <tr>
       <td>출생일 일주</td>
       <td id="birthDayPillarCell"></td>
@@ -234,4 +233,3 @@
   </table>
 </body>
 </html>
-
