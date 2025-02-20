@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>체질판별</title>
+    <title>체질 분석 웹</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
         function calculateResults() {
             let birthDateInput = document.getElementById("birthDate").value;
             if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
+                alert("생년월일을 YYYYMMDD 형식으로 입력하세요.");
                 return;
             }
 
@@ -140,8 +140,8 @@
     </script>
 </head>
 <body>
-    <h2>체질판별</h2>
-    <label for="birthDate">생년월일(양력) 입력 (YYYYMMDD 형식):</label>
+    <h2>체질 분석 웹</h2>
+    <label for="birthDate">생년월일 입력 (YYYYMMDD 형식):</label>
     <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101">
     <button onclick="calculateResults()">결과 확인</button>
 
@@ -156,31 +156,6 @@
             <td class="highlight">날짜</td>
             <td id="birthDateCell"></td>
             <td id="conceptionDateCell"></td>
-        </tr>
-        <tr>
-            <td>천간</td>
-            <td id="birthHeavenlyStemCell"></td>
-            <td id="conceptionHeavenlyStemCell"></td>
-        </tr>
-        <tr>
-            <td>운</td>
-            <td id="birthLuckCell"></td>
-            <td id="conceptionLuckCell"></td>
-        </tr>
-        <tr>
-            <td>오행</td>
-            <td id="birthElementCell"></td>
-            <td id="conceptionElementCell"></td>
-        </tr>
-        <tr>
-            <td>태과/불급</td>
-            <td id="birthImbalanceCell"></td>
-            <td id="conceptionImbalanceCell"></td>
-        </tr>
-        <tr>
-            <td class="category">체질</td>
-            <td id="birthConstitutionCell"></td>
-            <td id="conceptionConstitutionCell"></td>
         </tr>
     </table>
 </body>
