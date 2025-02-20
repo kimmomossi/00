@@ -1,4 +1,4 @@
-ㅋ<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -44,7 +44,8 @@
             const heavenlyStems = ["갑", "을", "병", "정", "무", "기", "경", "신", "임", "계"];
             const earthlyBranches = ["자", "축", "인", "묘", "진", "사", "오", "미", "신", "유", "술", "해"];
 
-            let baseDate = new Date(1900, 0, 31); // 1900년 1월 31일 기준
+            // 1984년 2월 4일(입춘) 기준으로 날짜 계산
+            let baseDate = new Date(1984, 1, 4); // 1984년 2월 4일
             let inputDate = new Date(year, month - 1, day);
             let dayDifference = Math.floor((inputDate - baseDate) / (1000 * 60 * 60 * 24));
 
