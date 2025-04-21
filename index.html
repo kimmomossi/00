@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>체질판별 (순수 JS)</title>
+  <title>체질판별 </title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; }
     table { width: 80%; margin: 20px auto; border-collapse: collapse; }
@@ -115,9 +115,9 @@
   </script>
 </head>
 <body>
-  <h2>체질판별 (순수 JS)</h2>
-  <label for="birthDate">생년월일 입력 (YYYYMMDD):</label>
-  <input type="text" id="birthDate" maxlength="8" placeholder="예: 19550812" />
+  <h2>체질판별</h2>
+  <label for="birthDate">생년월일(양력)입력 (YYYYMMDD):</label>
+  <input type="text" id="birthDate" maxlength="8" placeholder="예: 20250101" />
   <button onclick="calculateResults()">결과 확인</button>
   <h3>결과:</h3>
   <table>
@@ -157,7 +157,7 @@
       <td id="conceptionConstitutionCell"></td>
     </tr>
     <tr>
-      <td>출생일 일주 (60갑자)</td>
+      <td>출생일 일주</td>
       <td id="birthDayPillarCell"></td>
       <td></td>
     </tr>
