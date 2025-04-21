@@ -31,128 +31,24 @@
             font-weight: bold;
         }
     </style>
-    <!-- 만세력 기반 음양력 변환 및 60갑자 계산 라이브러리 -->
-    <script src="https://unpkg.com/solarlunar/solarlunar.min.js"></script>
-    <script>
+    <!-- 만세력 라이브러리 로드 (unpkg) -->
+    <script defer src="https://unpkg.com/solarlunar@2.0.7/solarlunar.min.js"></script>
+    <script defer>
         function calculateResults() {
-            let birthDateInput = document.getElementById("birthDate").value;
-            if (!/^\d{8}$/.test(birthDateInput)) {
-                alert("생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.");
+            // 라이브러리 로드 여부 확인
+            if (typeof solarLunar === 'undefined') {
+                alert('만세력 라이브러리가 로드되지 않았습니다. 인터넷 연결이나 CDN 경로를 확인하세요.');
                 return;
             }
 
-            let birthYear = parseInt(birthDateInput.substring(0, 4));
-            let birthMonth = parseInt(birthDateInput.substring(4, 6));
-            let birthDay = parseInt(birthDateInput.substring(6, 8));
-
-            // 음양력 변환이 필요 없으므로, 그대로 solarlunar로 60갑자 계산만 수행
-            let lunarData = solarlunar.solar2lunar(birthYear, birthMonth, birthDay);
-            // cyclicalYear, cyclicalMonth, cyclicalDay: 예 "갑자", "을축", "병인"
-
-            // 기존 체질판별 로직 (변경 없음)
-            let birthDate = new Date(birthYear, birthMonth - 1, birthDay);
-            let conceptionDate = new Date(birthDate);
-            conceptionDate.setDate(conceptionDate.getDate() - 266);
-            let conceptionYear = conceptionDate.getFullYear();
-
-            let birthHeavenlyStem = getHeavenlyStem(birthYear);
-            let conceptionHeavenlyStem = getHeavenlyStem(conceptionYear);
-            let birthLuck = getLuck(birthDate);
-            let conceptionLuck = getLuck(conceptionDate);
-            let birthElement = getFiveElements(birthHeavenlyStem, birthLuck);
-            let conceptionElement = getFiveElements(conceptionHeavenlyStem, conceptionLuck);
-            let birthImbalance = getImbalance(birthHeavenlyStem);
-            let conceptionImbalance = getImbalance(conceptionHeavenlyStem);
-            let birthConstitution = getConstitution(birthElement, birthImbalance);
-            let conceptionConstitution = getConstitution(conceptionElement, conceptionImbalance);
-
-            // 결과 업데이트
-            document.getElementById("birthDateCell").innerText = `${birthYear}년 ${birthMonth}월 ${birthDay}일`;
-            document.getElementById("conceptionDateCell").innerText = `${conceptionYear}년 ${conceptionDate.getMonth()+1}월 ${conceptionDate.getDate()}일`;
-            document.getElementById("birthHeavenlyStemCell").innerText = birthHeavenlyStem;
-            document.getElementById("conceptionHeavenlyStemCell").innerText = conceptionHeavenlyStem;
-            document.getElementById("birthLuckCell").innerText = birthLuck + "운";
-            document.getElementById("conceptionLuckCell").innerText = conceptionLuck + "운";
-            document.getElementById("birthElementCell").innerText = birthElement;
-            document.getElementById("conceptionElementCell").innerText = conceptionElement;
-            document.getElementById("birthImbalanceCell").innerText = birthImbalance;
-            document.getElementById("conceptionImbalanceCell").innerText = conceptionImbalance;
-            document.getElementById("birthConstitutionCell").innerText = birthConstitution;
-            document.getElementById("conceptionConstitutionCell").innerText = conceptionConstitution;
-
-            // 만세력 라이브러리로 계산된 일주 (60갑자) 전체
-            document.getElementById("birthDayPillarCell").innerText = lunarData.cyclicalDay;
-        }
-
-        // ===== 이하 기존 함수들 =====
-        function getHeavenlyStem(year) {
-            const heavenlyStems = ["갑","을","병","정","무","기","경","신","임","계"];
-            return heavenlyStems[(year - 4) % 10];
-        }
-
-        function getLuck(date) {
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            const formatted = (month<10?"0":"")+month + (day<10?"0":"")+day;
-            const periods = [
-                {start:"0120", end:"0401", luck:1},
-                {start:"0402", end:"0616", luck:2},
-                {start:"0617", end:"0829", luck:3},
-                {start:"0830", end:"1110", luck:4},
-                {start:"1111", end:"0119", luck:5}
-            ];
-            for (let p of periods) {
-                if ((formatted>=p.start && formatted<=p.end) ||
-                    (p.start==="1111" && (formatted>=p.start||formatted<=p.end))) {
-                    return p.luck;
-                }
+            const birthDateInput = document.getElementById('birthDate').value;
+            if (!/^\d{8}$/.test(birthDateInput)) {
+                alert('생년월일(양력)을 YYYYMMDD 형식으로 입력하세요.');
+                return;
             }
-            return "오류";
-        }
 
-        function getFiveElements(stem, luck) {
-            const startMap = {"갑":"土","기":"土","을":"金","경":"金","병":"水","신":"水","정":"木","임":"木","무":"火","계":"火"};
-            const cycle = ["土","金","水","木","火"];
-            const idx = cycle.indexOf(startMap[stem]);
-            return cycle[(idx + luck - 1) % 5];
-        }
+            const birthYear = parseInt(birthDateInput.slice(0, 4), 10);
+            const birthMonth = parseInt(birthDateInput.slice(4, 6), 10);
+            const birthDay = parseInt(birthDateInput.slice(6, 8), 10);
 
-        function getImbalance(stem) {
-            return ["갑","병","무","경","임"].includes(stem)?"태과":"불급";
-        }
-
-        function getConstitution(elem, imb) {
-            const map = {
-                "木": {"태과":"간실비허","불급":"폐실간허"},
-                "火": {"태과":"심실폐허","불급":"신실심허"},
-                "水": {"태과":"신실심허","불급":"비실신허"},
-                "土": {"태과":"비실신허","불급":"간실비허"},
-                "金": {"태과":"폐실간허","불급":"심실폐허"}
-            };
-            return map[elem][imb];
-        }
-    </script>
-</head>
-<body>
-    <h2>체질판별 (만세력 적용)</h2>
-    <label for="birthDate">생년월일 입력 (YYYYMMDD):</label>
-    <input type="text" id="birthDate" maxlength="8" placeholder="예: 19820906">
-    <button onclick="calculateResults()">결과 확인</button>
-
-    <h3>결과:</h3>
-    <table>
-        <tr>
-            <th></th>
-            <th>출생일 - 후천체질</th>
-            <th>입태일 - 선천체질</th>
-        </tr>
-        <tr><td class="highlight">날짜</td><td id="birthDateCell"></td><td id="conceptionDateCell"></td></tr>
-        <tr><td>천간</td><td id="birthHeavenlyStemCell"></td><td id="conceptionHeavenlyStemCell"></td></tr>
-        <tr><td>운</td><td id="birthLuckCell"></td><td id="conceptionLuckCell"></td></tr>
-        <tr><td>오행</td><td id="birthElementCell"></td><td id="conceptionElementCell"></td></tr>
-        <tr><td>태과/불급</td><td id="birthImbalanceCell"></td><td id="conceptionImbalanceCell"></td></tr>
-        <tr class="category"><td>체질</td><td id="birthConstitutionCell"></td><td id="conceptionConstitutionCell"></td></tr>
-        <tr><td>출생일 일주 (60갑자)</td><td id="birthDayPillarCell"></td><td></td></tr>
-    </table>
-</body>
-</html>
+            // solarlunar 라이브러리로 음양력 및 간지 정보 계산
